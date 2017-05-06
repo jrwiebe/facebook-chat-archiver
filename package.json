@@ -1,0 +1,17 @@
+{
+	"name": "facebook-chat-archiver",
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"license": "MIT",
+	"version": "0.0.1",
+	"description": "Archive a chat conversation.",
+	"dependencies": {
+		"facebook-chat-api": "Schmavery/facebook-chat-api",
+		"sqlite3": "latest"
+	},
+	"engines": {
+		"node": "5.6.0"
+	}
+}
