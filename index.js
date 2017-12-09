@@ -6,7 +6,6 @@ var db = new sqlite3.Database(conf.dbName);
 
 login({email: conf.username, password: conf.password}, (err, api) => {
   if(err) return console.error(err);
-
   // This is the timestamp of the first message that will be fetched.
   // Undefined value means start from the current timestamp.
   // If your archive fails while running, put the last printed timestamp here and run again.
@@ -15,7 +14,7 @@ login({email: conf.username, password: conf.password}, (err, api) => {
 });
 
 function saveThreadHistory(api, db, threadId, sliceSize, timestamp) {
-  api.getThreadHistory(threadId, sliceSize, timestamp, (err, history) => {
+  api.getThreadHistoryGraphQL(threadId, sliceSize, timestamp, (err, history) => {
     if (!history || history.length <= 1) {
       console.log("It looks to be done!");
       return;
@@ -30,8 +29,9 @@ function saveThreadHistory(api, db, threadId, sliceSize, timestamp) {
       // Attempt to save valuable information about each type, such as the text or the URL of the attachment.
       var text = "";
       if (message.body) text = message.body;
-      if (message.attachments.length > 0) {
+      if (message.hasOwnProperty("attachments") && message.attachments.length > 0) {
         var attachment = message.attachments[0];
+        if (attachment.type == "image") text = attachment.largePreviewUrl;
         if (attachment.type == "photo") text = attachment.largePreviewUrl;
         if (attachment.type == "sticker") text = attachment.url;
         if (attachment.type == "animated_image") text = attachment.previewUrl;
